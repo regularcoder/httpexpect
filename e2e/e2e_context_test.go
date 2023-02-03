@@ -440,8 +440,10 @@ func TestE2EContext_PerRequestRetry(t *testing.T) {
 		defer cancel()
 
 		e := httpexpect.WithConfig(httpexpect.Config{
-			BaseURL:          ts.URL,
-			AssertionHandler: &httpexpect.DefaultAssertionHandler{Formatter: &httpexpect.DefaultFormatter{}},
+			BaseURL: ts.URL,
+			AssertionHandler: &httpexpect.DefaultAssertionHandler{
+				Formatter: &httpexpect.DefaultFormatter{},
+			},
 		})
 
 		e.GET("/").

@@ -162,7 +162,7 @@ func testRedirects(t *testing.T, createFn func(httpexpect.Reporter) *httpexpect.
 				Status(http.StatusOK)
 
 			assert.False(t, reporter.failed)
-			})
+		})
 
 		t.Run("max redirects above actual", func(t *testing.T) {
 			reporter := &booleanReporter{}
