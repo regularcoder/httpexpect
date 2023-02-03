@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -234,27 +233,6 @@ func mockFailure() AssertionFailure {
 			errors.New("test_error"),
 		},
 	}
-}
-
-type mockPrinter struct {
-	reqBody  []byte
-	respBody []byte
-	rtt      time.Duration
-}
-
-func (p *mockPrinter) Request(req *http.Request) {
-	if req.Body != nil {
-		p.reqBody, _ = ioutil.ReadAll(req.Body)
-		req.Body.Close()
-	}
-}
-
-func (p *mockPrinter) Response(resp *http.Response, rtt time.Duration) {
-	if resp.Body != nil {
-		p.respBody, _ = ioutil.ReadAll(resp.Body)
-		resp.Body.Close()
-	}
-	p.rtt = rtt
 }
 
 type mockWebsocketPrinter struct {
