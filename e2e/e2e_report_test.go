@@ -1,7 +1,8 @@
-package httpexpect
+package e2e
 
 import (
 	"fmt"
+	"github.com/gavv/httpexpect/v2"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -28,7 +29,7 @@ func TestE2EReport_Names(t *testing.T) {
 
 	rep := &recordingReporter{}
 
-	e := WithConfig(Config{
+	e := httpexpect.WithConfig(httpexpect.Config{
 		TestName: "TestExample",
 		BaseURL:  server.URL,
 		Reporter: rep,
@@ -58,7 +59,7 @@ func TestE2EReport_Aliases(t *testing.T) {
 
 	rep := &recordingReporter{}
 
-	e := WithConfig(Config{
+	e := httpexpect.WithConfig(httpexpect.Config{
 		TestName: "TestExample",
 		BaseURL:  server.URL,
 		Reporter: rep,
