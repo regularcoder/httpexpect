@@ -2,11 +2,11 @@ package e2e
 
 import (
 	"fmt"
-	"github.com/gavv/httpexpect/v2"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
+	"github.com/gavv/httpexpect/v2"
 	"github.com/stretchr/testify/assert"
 )
 

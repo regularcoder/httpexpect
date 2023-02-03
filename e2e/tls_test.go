@@ -2,12 +2,12 @@ package e2e
 
 import (
 	"crypto/tls"
-	"github.com/gavv/httpexpect/v2"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 
+	"github.com/gavv/httpexpect/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/valyala/fasthttp"
 )

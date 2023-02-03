@@ -3,11 +3,11 @@ package e2e
 import (
 	"crypto/tls"
 	"encoding/json"
-	"github.com/gavv/httpexpect/v2"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
+	"github.com/gavv/httpexpect/v2"
 	"github.com/valyala/fasthttp/fasthttpadaptor"
 )
 

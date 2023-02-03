@@ -3,7 +3,6 @@ package e2e
 import (
 	"context"
 	"errors"
-	"github.com/gavv/httpexpect/v2"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -11,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/gavv/httpexpect/v2"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -441,9 +441,7 @@ func TestE2EContext_PerRequestRetry(t *testing.T) {
 
 		e := httpexpect.WithConfig(httpexpect.Config{
 			BaseURL: ts.URL,
-			AssertionHandler: &httpexpect.DefaultAssertionHandler{
-				Formatter: &httpexpect.DefaultFormatter{},
-			},
+			Reporter: t,
 		})
 
 		e.GET("/").

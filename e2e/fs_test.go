@@ -1,13 +1,13 @@
 package e2e
 
 import (
-	"github.com/gavv/httpexpect/v2"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"path"
 	"testing"
 
+	"github.com/gavv/httpexpect/v2"
 	"github.com/valyala/fasthttp"
 )
 

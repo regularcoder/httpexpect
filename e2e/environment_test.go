@@ -1,9 +1,9 @@
 package e2e
 
 import (
-	"github.com/gavv/httpexpect/v2"
 	"testing"
 
+	"github.com/gavv/httpexpect/v2"
 	"github.com/stretchr/testify/assert"
 )
 

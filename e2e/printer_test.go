@@ -1,13 +1,13 @@
 package e2e
 
 import (
-	"github.com/gavv/httpexpect/v2"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
 
+	"github.com/gavv/httpexpect/v2"
 	"github.com/stretchr/testify/assert"
 )
 

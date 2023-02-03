@@ -1,24 +1,15 @@
 package e2e
 
 import (
-	"github.com/gavv/httpexpect/v2"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
+	"github.com/gavv/httpexpect/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/valyala/fasthttp"
 )
-
-type booleanReporter struct {
-	failed bool
-}
-
-// Errorf implements Reporter.Errorf.
-func (r *booleanReporter) Errorf(message string, args ...interface{}) {
-	r.failed = true
-}
 
 func createRedirectHandler() http.Handler {
 	mux := http.NewServeMux()
@@ -154,7 +145,7 @@ func testRedirects(t *testing.T, createFn func(httpexpect.Reporter) *httpexpect.
 
 	t.Run("max-redirects", func(t *testing.T) {
 		t.Run("no max redirects set", func(t *testing.T) {
-			reporter := &booleanReporter{}
+			reporter := &mockReporter{}
 			e := createFn(reporter)
 
 			e.POST("/double_redirect").
@@ -165,7 +156,7 @@ func testRedirects(t *testing.T, createFn func(httpexpect.Reporter) *httpexpect.
 		})
 
 		t.Run("max redirects above actual", func(t *testing.T) {
-			reporter := &booleanReporter{}
+			reporter := &mockReporter{}
 			e := createFn(reporter)
 
 			e.POST("/double_redirect").
@@ -177,7 +168,7 @@ func testRedirects(t *testing.T, createFn func(httpexpect.Reporter) *httpexpect.
 		})
 
 		t.Run("max redirects below actual", func(t *testing.T) {
-			reporter := &booleanReporter{}
+			reporter := &mockReporter{}
 			e := createFn(reporter)
 
 			e.POST("/double_redirect").
@@ -189,7 +180,7 @@ func testRedirects(t *testing.T, createFn func(httpexpect.Reporter) *httpexpect.
 		})
 
 		t.Run("max redirects equal to actual", func(t *testing.T) {
-			reporter := &booleanReporter{}
+			reporter := &mockReporter{}
 			e := createFn(reporter)
 
 			e.POST("/redirect308").
@@ -201,7 +192,7 @@ func testRedirects(t *testing.T, createFn func(httpexpect.Reporter) *httpexpect.
 		})
 
 		t.Run("max redirects zero with redirect", func(t *testing.T) {
-			reporter := &booleanReporter{}
+			reporter := &mockReporter{}
 			e := createFn(reporter)
 
 			e.POST("/redirect308").
@@ -213,7 +204,7 @@ func testRedirects(t *testing.T, createFn func(httpexpect.Reporter) *httpexpect.
 		})
 
 		t.Run("max redirects zero without redirect", func(t *testing.T) {
-			reporter := &booleanReporter{}
+			reporter := &mockReporter{}
 			e := createFn(reporter)
 
 			e.POST("/content").
