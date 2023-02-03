@@ -1,4 +1,4 @@
-package httpexpect
+package e2e
 
 import (
 	"fmt"
@@ -8,6 +8,7 @@ import (
 	"testing"
 	"text/template"
 
+	"github.com/gavv/httpexpect/v2"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -38,7 +39,7 @@ func TestE2EReport_Names(t *testing.T) {
 
 	reporter := &recordingReporter{}
 
-	e := WithConfig(Config{
+	e := httpexpect.WithConfig(httpexpect.Config{
 		TestName: "TestExample",
 		BaseURL:  server.URL,
 		Reporter: reporter,
@@ -68,7 +69,7 @@ func TestE2EReport_Aliases(t *testing.T) {
 
 	reporter := &recordingReporter{}
 
-	e := WithConfig(Config{
+	e := httpexpect.WithConfig(httpexpect.Config{
 		TestName: "TestExample",
 		BaseURL:  server.URL,
 		Reporter: reporter,
@@ -105,12 +106,12 @@ func TestE2EReport_LineWidth(t *testing.T) {
 
 	cases := []struct {
 		name        string
-		formatter   *DefaultFormatter
+		formatter   *httpexpect.DefaultFormatter
 		longestLine widthRange
 	}{
 		{
 			name: "no limit",
-			formatter: &DefaultFormatter{
+			formatter: &httpexpect.DefaultFormatter{
 				LineWidth: -1, // no limit
 			},
 			longestLine: widthRange{
@@ -119,7 +120,7 @@ func TestE2EReport_LineWidth(t *testing.T) {
 		},
 		{
 			name: "large limit",
-			formatter: &DefaultFormatter{
+			formatter: &httpexpect.DefaultFormatter{
 				LineWidth: 1000, // explicit limit - 1000 chars
 			},
 			longestLine: widthRange{
@@ -128,7 +129,7 @@ func TestE2EReport_LineWidth(t *testing.T) {
 		},
 		{
 			name: "default limit",
-			formatter: &DefaultFormatter{
+			formatter: &httpexpect.DefaultFormatter{
 				LineWidth: 0, // default limit - 60 chars
 			},
 			longestLine: widthRange{
@@ -138,7 +139,7 @@ func TestE2EReport_LineWidth(t *testing.T) {
 		},
 		{
 			name: "explicit limit",
-			formatter: &DefaultFormatter{
+			formatter: &httpexpect.DefaultFormatter{
 				LineWidth: 30, // explicit limit - 30 chars
 			},
 			longestLine: widthRange{
@@ -154,10 +155,10 @@ func TestE2EReport_LineWidth(t *testing.T) {
 			fmt.DisableRequests = true
 			fmt.DisableResponses = true
 
-			e := WithConfig(Config{
+			e := httpexpect.WithConfig(httpexpect.Config{
 				TestName: "TestExample",
 				BaseURL:  server.URL,
-				AssertionHandler: &DefaultAssertionHandler{
+				AssertionHandler: &httpexpect.DefaultAssertionHandler{
 					Formatter: fmt,
 					Reporter:  rep,
 				},
@@ -173,7 +174,7 @@ func TestE2EReport_LineWidth(t *testing.T) {
 				Object().
 				Value("baz").
 				Array().
-				NotContains(1)
+				NotContainsAll(1)
 
 			t.Logf("%s", rep.recorded)
 
@@ -206,7 +207,7 @@ func TestE2EReport_CustomTemplate(t *testing.T) {
 	server := httptest.NewServer(mux)
 	defer server.Close()
 
-	formatter := &DefaultFormatter{
+	formatter := &httpexpect.DefaultFormatter{
 		SuccessTemplate: "{{ .TestName | underscore }} succeeded",
 		FailureTemplate: "{{ .TestName | underscore }} failed: " +
 			"want {{ index .Expected 0 }}, got {{ .Actual }}",
@@ -226,10 +227,10 @@ func TestE2EReport_CustomTemplate(t *testing.T) {
 		reporter := &recordingReporter{}
 		logger := &recordingLogger{}
 
-		e := WithConfig(Config{
+		e := httpexpect.WithConfig(httpexpect.Config{
 			TestName: "formatter test",
 			BaseURL:  server.URL,
-			AssertionHandler: &DefaultAssertionHandler{
+			AssertionHandler: &httpexpect.DefaultAssertionHandler{
 				Formatter: formatter,
 				Reporter:  reporter,
 				Logger:    logger,
@@ -248,10 +249,10 @@ func TestE2EReport_CustomTemplate(t *testing.T) {
 		reporter := &recordingReporter{}
 		logger := &recordingLogger{}
 
-		e := WithConfig(Config{
+		e := httpexpect.WithConfig(httpexpect.Config{
 			TestName: "formatter test",
 			BaseURL:  server.URL,
-			AssertionHandler: &DefaultAssertionHandler{
+			AssertionHandler: &httpexpect.DefaultAssertionHandler{
 				Formatter: formatter,
 				Reporter:  reporter,
 				Logger:    logger,
@@ -273,12 +274,12 @@ func TestE2EReport_CustomTemplate(t *testing.T) {
 		reporter := &recordingReporter{}
 		logger := &recordingLogger{}
 
-		e := WithConfig(Config{
+		e := httpexpect.WithConfig(httpexpect.Config{
 			TestName: "formatter test",
 			BaseURL:  server.URL,
 			Reporter: reporter,
-			AssertionHandler: &DefaultAssertionHandler{
-				Formatter: &DefaultFormatter{
+			AssertionHandler: &httpexpect.DefaultAssertionHandler{
+				Formatter: &httpexpect.DefaultFormatter{
 					SuccessTemplate: "{{ Invalid }}",
 				},
 				Reporter: reporter,
@@ -296,12 +297,12 @@ func TestE2EReport_CustomTemplate(t *testing.T) {
 		reporter := &recordingReporter{}
 		logger := &recordingLogger{}
 
-		e := WithConfig(Config{
+		e := httpexpect.WithConfig(httpexpect.Config{
 			TestName: "formatter test",
 			BaseURL:  server.URL,
 			Reporter: reporter,
-			AssertionHandler: &DefaultAssertionHandler{
-				Formatter: &DefaultFormatter{
+			AssertionHandler: &httpexpect.DefaultAssertionHandler{
+				Formatter: &httpexpect.DefaultFormatter{
 					SuccessTemplate: "{{ .Invalid }}",
 				},
 				Reporter: reporter,
@@ -330,32 +331,32 @@ func TestE2EReport_RequestResponse(t *testing.T) {
 
 	cases := []struct {
 		name      string
-		formatter *DefaultFormatter
+		formatter *httpexpect.DefaultFormatter
 	}{
 		{
 			name: "request and response enabled",
-			formatter: &DefaultFormatter{
+			formatter: &httpexpect.DefaultFormatter{
 				DisableRequests:  false,
 				DisableResponses: false,
 			},
 		},
 		{
 			name: "request enabled, response disabled",
-			formatter: &DefaultFormatter{
+			formatter: &httpexpect.DefaultFormatter{
 				DisableRequests:  false,
 				DisableResponses: true,
 			},
 		},
 		{
 			name: "request disabled, response enabled",
-			formatter: &DefaultFormatter{
+			formatter: &httpexpect.DefaultFormatter{
 				DisableRequests:  true,
 				DisableResponses: false,
 			},
 		},
 		{
 			name: "request and response disabled",
-			formatter: &DefaultFormatter{
+			formatter: &httpexpect.DefaultFormatter{
 				DisableRequests:  true,
 				DisableResponses: true,
 			},
@@ -366,10 +367,10 @@ func TestE2EReport_RequestResponse(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			rep := &recordingReporter{}
 
-			e := WithConfig(Config{
+			e := httpexpect.WithConfig(httpexpect.Config{
 				TestName: "TestExample",
 				BaseURL:  server.URL,
-				AssertionHandler: &DefaultAssertionHandler{
+				AssertionHandler: &httpexpect.DefaultAssertionHandler{
 					Formatter: tc.formatter,
 					Reporter:  rep,
 				},
@@ -385,7 +386,7 @@ func TestE2EReport_RequestResponse(t *testing.T) {
 				Object().
 				Value("baz").
 				Array().
-				NotContains(1)
+				NotContainsAll(1)
 
 			logs := rep.recorded
 
